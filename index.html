@@ -1,0 +1,113 @@
+<head>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html,
+    body {
+      margin: 0;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
+      height: 100vh;
+      width: 100vw;
+      overflow: hidden;
+      background: #fd0e1c;
+      font-family: -apple-system, "Helvetica Neue", sans-serif;
+      font-size: large;
+    }
+
+    article:nth-child(2n) > div {
+      background: #1c1e20;
+    }
+
+    article {
+      display: block;
+    }
+
+    article > div {
+      box-shadow: 3px 3px 209px 6px #4f4f4f;
+      background: #fd0e1c;
+      color: white;
+      display: flex;
+      padding: 1%;
+
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+
+    #N {
+      bottom: 0;
+      left: 0;
+      right:  0;
+      margin: auto;
+      position: fixed;
+      justify-content: center;
+      align-items: center;
+      display: flex;
+      background: #fd0e1c;
+      mix-blend-mode: difference;
+      opacity: 0.5;
+      left: 0;
+      right: 0;
+      font-size: xx-large;
+    }
+  </style>
+  <script>
+    const $ = (id) =>
+      document.getElementById(id)
+        ? document.getElementById(id)
+        : document.body.appendChild(
+            document
+              .createElement("article")
+              .appendChild(
+                Object.assign(document.createElement("article"), { id })
+              )
+          );
+    const display = ({ mean, last }) => {
+      console.log(mean, last);
+      const createBar = (name, dataset) => {
+        const title =
+          document.getElementById(name + "title") ||
+          $(name).appendChild(
+            Object.assign(document.createElement("div"), {
+              id: name + "title",
+              innerHTML: name,
+            })
+          );
+        const max = Object.values(dataset).reduce((res, a) => res + a, 0);
+        const bars = Object.entries(dataset).map(([key, data]) => {
+          const block =
+            document.getElementById(name + key) ||
+            $(name).appendChild(
+              Object.assign(document.createElement("div"), { id: name + key })
+            );
+          block.style.height = Math.floor((100 * data) / max) + "%";
+          block.innerHTML = `<span>${key}</span> <span>${block.style.height}</span>`;
+        });
+      };
+
+      createBar("version", last.version);
+      createBar("country", Object.fromEntries(last.country));
+      createBar("sections", last.sections);
+      createBar("status", last.status);
+
+      N =
+        document.getElementById("Nc") ||
+        $("N").appendChild(
+          Object.assign(document.createElement("main"), { id: "Nc" })
+        );
+      N.innerText = `${last.N} (10s)`;
+    };
+
+    setTimeout(function sync() {
+      fetch("/", {
+        method: "POST",
+        body: {},
+      })
+        .then((r) => r.json())
+        .then(display)
+        .then(() => setTimeout(sync, 3000));
+    });
+  </script>
+</head>
+<body></body>
