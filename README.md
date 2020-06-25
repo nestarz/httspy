@@ -1,6 +1,6 @@
-# Technical Test
+# httspy
 
-## Formulation
+## Motivation
 
 The program will consume an actively written-to w3c-formatted HTTP access log.
 
@@ -78,7 +78,4 @@ I started the project by writing the unnitest using pytest, hint typing and trie
 
 Regarding the analystics, a fake lookup of the ip is used to target the location of the clients, a mean analysis is done for the byte length of the files and a weighted sum is done for the others fields. Also, for the alert, a state is passed after each loop to the next scheldule to notify the alert.
 
-Also, I tried in this project to do as much as possible functional programming with the less state than possible, I would be glad to dicuss the reasons with you.
-
-Thank you,
-Elias
+Also, I tried in this project to do as much as possible functional programming with the less state than possible
